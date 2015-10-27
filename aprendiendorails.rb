@@ -1310,7 +1310,7 @@ class Post < ActiveRecord::Base
 	validates :content, presence: true
 end
 
-//////
+//////HOLA ALFREDOOOO
 
 Lo mismo para reviews.
 
