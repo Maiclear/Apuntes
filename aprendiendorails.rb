@@ -1477,7 +1477,8 @@ ejemplo
 en index:
 
 <%= render @movies %> //> pq esta dentro del mismo archivo views/movies
-y el nombre del parcial es _movie.html.erb // con el nombre en singular de la coleccion ( en este caso @movies) // pero aqui estas iterando, llamando al parcial como haciendo un each. cdo se usa .each
+y el nombre del parcial es _movie.html.erb // con el nombre en singular de la coleccion ( en este caso @movies) // pero aqui estas iterando, llamando al parcial como haciendo un each. #cdo se usa .each,
+En realidad loq ue hace es llamar a la vista y lo itera o repite la vista las n veces de la cantidad de la coleccion @movies, repite el proceso "nºdecoleccion@movies" veces.
 
 
 //que me falta pa mi blig, hacer el metodo like en post y comment, y agregar en el modelo de post que solo deje de botar una vez.
