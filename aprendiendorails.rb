@@ -1471,3 +1471,19 @@ $ rails g controller admin/prodcuts campo!:naturaleza etc //tb se puede poner so
 
 las rutas se agregan a mano, por que está nested (admin/...) dentro de una carpeta.
 
+NUEVAMENTE METODO DE INSTANCIA O METODO DE CLASE
+
+cdo es metodo de clase se le agrega el SELF. en el nombre del metodo, ejemplo:
+def self.product // esto es un método de clase.es decir lo puedes llamar "Clase.product"
+end
+
+El método de clase puede ser usado para la clase y para una coleccion de cosas de la clase, ejemplo class Cars.
+=> Cars.product, cars.product (cdo es coleccion, carsssssssss)
+Pero NUNCA para 1 sola instancia.
+
+metodo de instancia nombre y definicion normal y se usa para una instancia.
+def product
+	self.role
+end
+
+y dentro de este puedes utilizar el self.role para llamar a la instancia especifica.
