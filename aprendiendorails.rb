@@ -300,7 +300,7 @@ RELOAD!
 poner reload! en la consola cada vez q se haga algun cambio en el proyecto. aveces no funciona, asique a veces debe salir y entrar nuevamente.
 
 CLAVE FOREIGN PUEST EN MODELO DIRECTAMENTE
-$ rails g model review author:string content: text movie:references <= con esto agrego la clave foránea instantaneamente.(movie:references => ie . movie_id = movie(id))
+$ rails g model review author:string content:text movie:references <= con esto agrego la clave foránea instantaneamente.(movie:references => ie . movie_id = movie(id))
 
 
 RELACION UNO ES A MUCHOS EN RUBY (agregar a mano si no está)
@@ -1001,7 +1001,45 @@ User.find(1).admin! //vamos aaa verr??? Así es! perfecto.
 User.find(2).editor! // y así puedo seguir.
 
 ////////////////////////////////////////////////////////////////
+AHORA HACER LA RELACION DE USER A MOVIES Y REVIEWS UNO A ES MUCHOS
+	class AddUserRefToMovie < ActiveRecord::Migration
+	  def change
+	    add_reference :movies, :user, index: true, foreign_key: true
+	  end
+	end
+	///esta para movie $ rails g migration AddUserRefToMovie y luego lo mismo para review.
+	AddUserRefToReview
 
+	class AddUserRefToReview < ActiveRecord::Migration
+  def change
+    add_reference :reviews, :user, index: true, foreign_key: true
+  end
+end
+/// y luego hacerlo a nivel modelo. (y validaciones respectivamente)
+en modelo USER
+has_many :movies, dependent: :destroy
+has_many :reviews, dependent: :destroy
+
+validates :username, uniqueness: { case_sensitive: false }
+# validate :validate_username
+
+# def validate_username
+#     if User.where(email: username).exists?
+#       errors.add(:username, :invalid)
+#     end
+#   end
+
+  def to_s
+    "#{self.name} #{self.lastname}"
+  end
+end /// esto para facilitar las cosas.
+Modelo Movie
+belongs_to :user
+Modelo Review
+belongs_to :user
+
+
+/////////////////////////////
 HELPER DEVISE  before_action :authenticate_user!
 
 before_action :authenticate_user!, except: [:index, :show] // esto dice que si no esta logeado solo puede ver el index y el show.
