@@ -1050,6 +1050,7 @@ if user_signed_in? && (current_user.editor? || current_user.admin?)
 	link_to edit
 end
 
+//todo esto se puede hacer con cancan(lo de arriba)
 
 COMO HAGO PARA GUARDAR EL USER EN LA CREACION DE UNA PELI
 
