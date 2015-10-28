@@ -1358,17 +1358,35 @@ PARA CREAR UN LIKE EN LA CONSOLA RAILS
 
 [25] pry(main)> Post.last.likes.last.user.name //para ver quien fue
 
-luego debo agregarle la ruta (con member en rutas) //member do
-  														 get 'like'
-  													end
-luego agregarla a la vista show (o correspondiendte)
-luego agregar el metodo en los controladores post y comment.
-def like
-	@like = @movie.likes.build(user: current_user) if user_signed_in?
-	@like.save //pq el build no salva, no como el .create
+luego debo agregarle la RUTA (con member en rutas) //
 
-	redirect_to @movie, notice: 'Gracias por tu like'
+member do
+ 	get 'like'
 end
+//////
+
+luego agregarla a la VISTA show (o correspondiendte)//
+
+<p>Likes: <strong> <%= @post.likes.count %></strong></p>
+
+<p>
+	<% unless @post.liked_by? current_user  %>
+		<%= link_to 'Me Gusta', like_post_path(@post) %>
+	<% else %>
+		<%= link_to 'Deshacer Me gusta', like_post_path(@post)  %>
+	<% end %>
+</p>
+
+>////////
+
+luego agregar el METODO en los CONTROLADORES post y comment. (pero esto está mejor escrito más adaelante, sáltate este paso (lo comentaré por ahora.))
+
+# def like
+# 	@like = @movie.likes.build(user: current_user) if user_signed_in?
+# 	@like.save //pq el build no salva, no como el .create
+
+# 	redirect_to @movie, notice: 'Gracias por tu like'
+# end
 
 ojo que ya hicimos el cancan entonces tenemos que declarar el like en cancan, para que se puede hacer. (en el modelo ability.rb)
 
@@ -1400,12 +1418,15 @@ end
 
 en show.html.erb
 
-<p>Me Gusta: <strong> <%= @post.likes.count %></strong></p>
+<p>Likes: <strong> <%= @post.likes.count %></strong></p>
 
-<p>Dale Gusta:
-	<%= link_to '+1', post_like_path(@post) %>
+<p>
+	<% unless @post.liked_by? current_user  %>
+		<%= link_to 'Me Gusta', like_post_path(@post) %>
+	<% else %>
+		<%= link_to 'Deshacer Me gusta', like_post_path(@post)  %>
+	<% end %>
 </p>
-
 
 //////OJO//////
 
@@ -1553,4 +1574,4 @@ end
 
 y dentro de este puedes utilizar el self.role para llamar a la instancia especifica.
 
-// PUEBA: Crear los todos los modelos y sus relacion pa llegar donde pato.
+// PUEBA: Crear los todos los modelos y sus relacion pa llegar donde pato., falta hacer views de reviews y likes.
