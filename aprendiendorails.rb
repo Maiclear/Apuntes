@@ -1365,19 +1365,34 @@ member do
 end
 //////
 
-luego agregarla a la VISTA show (o correspondiendte)//
+luego agregarla a la VISTA show de post (o correspondiendte)//
 
-<p>Likes: <strong> <%= @post.likes.count %></strong></p>
 
-<p>
-	<% unless @post.liked_by? current_user  %>
-		<%= link_to 'Me Gusta', like_post_path(@post) %>
-	<% else %>
-		<%= link_to 'Deshacer Me gusta', like_post_path(@post)  %>
-	<% end %>
-</p>
-
+<% if can? :like, Post %>
+	<p>Likes: <strong> <%= @post.likes.count %></strong></p>
+	<p>
+		<% unless @post.liked_by? current_user  %>
+			<%= link_to 'Me Gusta', like_post_path(@post) %>
+		<% else %>
+			<%= link_to 'Deshacer Me gusta', like_post_path(@post)  %>
+		<% end %>
+	</p>
+<% end %>
 >////////
+aquie respectivo a reviews
+
+<% if can? :like, Review %>
+	<p>Likes: <strong> <%= @review.likes.count %></strong></p>
+	<p>Me gusta:
+		<% unless @review.liked_by? current_user %>
+			<%= link_to 'Me Gusta' like_movie_review_path(@post, review)  %>
+		<% else %>
+			<%= link_to 'Deshacer Me gusta', like_movie_review_path(@post, review)  %>
+		<% end %>
+	</p>
+<% end %>
+
+>//////
 
 luego agregar el METODO en los CONTROLADORES post y comment. (pero esto está mejor escrito más adaelante, sáltate este paso (lo comentaré por ahora.))
 
