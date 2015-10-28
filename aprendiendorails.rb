@@ -1316,6 +1316,7 @@ Lo mismo para reviews.
 
 y para el modelo USER se pone (en el ejemplo de post y comment)
 
+has_many :likes, as: :likeable
 has_many :post_likes, through: :likes, source: :post
 has_many :comment_likes, through: :likes, source: :comment
 
@@ -1425,7 +1426,7 @@ RESTRINGIR LOS ME GUSTA A UNO SOLO POR USER. // un LIKE por USER
 
 	Agregando ahora la restrcicion de una solo like EN MODELO POST
 
-	definiendo metodo, aqui lo declaro en el modelo
+	definiendo metodo, aqui lo declaro en el modelo(tanto movies como reviews(donde pongo el like))
 
   def remove_like user
     self.likes.where(user: user).first.delete
@@ -1435,13 +1436,37 @@ RESTRINGIR LOS ME GUSTA A UNO SOLO POR USER. // un LIKE por USER
     self.user_likes.include? user
   end
 
+	LUEGO EN EL CONTROLLER // aqui en movie
 
-	LUEGO EN EL CONTROLLER // aqui lo dejo
 	def like
-		if @post.liked_by? current_user
-			@post.liked..first.delete
-	end
+	    @like = @movie.likes.build(user: current_user)
 
+	    if @movie.liked_by? current_user
+	      @movie.remove_like current_user
+	      redirect_to @movie, notice: 'Tu like a sido eliminado :('
+	    elsif @movie.save
+	      redirect_to @movie, notice: 'Gracias por tu like :D'
+	    else
+	      redirect_to @movie, notice: 'Tu like no se ha guardado :('
+	    end
+  	end
+
+	LUEGO EN OTRO CONTROLLER QUE TENGA LIKE // REVIEW EN ESTE CASO
+
+	def like
+    @movie = Movie.find(params[:movie_id])
+    @review = Review.find(params[:id])
+    @like = @review.likes.build(user: current_user)
+
+    if @review.liked_by? current_user
+      @review.remove_like current_user
+      redirect_to @movie, notice: 'Tu like a sido eliminado :('
+    elsif @like.save
+      redirect_to @movie, notice: 'Gracias por tu like :D'
+    else
+      redirect_to @movie, notice: 'Tu like no se ha guardado :('
+    end
+  end
 
 ///////////OJO/////////
 
