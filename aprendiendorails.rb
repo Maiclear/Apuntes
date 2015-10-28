@@ -647,7 +647,7 @@ y en el controllador agregandole esto al show
   end
 
 ////////////
-RELACION MUCHOS ES A MUCHOS:
+RELACION MUCHOS ES A MUCHOS: SIEMPRE HABRá UNA TABLA INTERMEDIA.
 	*---*
 	n---n
 
@@ -691,7 +691,7 @@ RELACION MUCHOS ES A MUCHOS:
 
 			has_many through
 
-			$rails g model movie_genre movie:references genre:references // aqui estoy creando un MODELO con las dos llaves foraneas
+			$ rails g model movie_genre movie:references genre:references // aqui estoy creando un MODELO con las dos llaves foraneas
 			$ rake db:migrate
 
 			y para crear la realcion entre ellos debo escribir en ambos modelos
@@ -710,7 +710,7 @@ RELACION MUCHOS ES A MUCHOS:
 
 			ahora en el modelo de la tabla intermedia poner
 
-			validates :movie_id, :uniqueness: {:scope => :genre_id} // LEE ABAJO.
+			validates :movie_id, uniqueness: {:scope => :genre_id} // LEE ABAJO.
 											ó  { scope: :genre_id}(esta es la manera nueva de ponerlo.)
 
 			aqui estoy diciendo que la combincacion de movie:id(n) y genre_id(m) en una fila de la tabla NO se replique, sea única. entonces te mandará un error de que esa combinacion YA existe, haciendo un rollback.
@@ -980,7 +980,7 @@ class AddDefaultRoleToUser < ActiveRecord::Migration
 end
 
 
-y a nivel de modelo creo un modelo  User
+y a nivel de modelo creo un modelo  User //así tengo a nivel base de datos y a nivel modelo
 
 hacemos un callback
 
@@ -1651,5 +1651,107 @@ CREAR UN MODEL Y UN CONTROLLER JUNTOS CON RESOURCE
 $ rails g resource Review campo1:tipo product:references
 
 y me crea el modelo, el controlador (vacío) y la vista reviews (vacía) // en este ejemplo con el campo1 y la foreign key de product para relacion uno es a muchos de product con review
+
+CREACION ADMIN NAMESPACE.
+
+	$ rails g scaffold_controller admin/prodcut
+
+	Y luego en el modelo admin/product, borrar en todos los metodos, Admin::Product(dejar solo Product que es el modelo que ya teniamos creado y es el que queremos usar) y así para todos mis controladores.
+
+	$ rails g scaffold_controller admin/orders
+	$ rails g scaffold_controller admin/users
+	$ rails g controller admin/pages
+
+Y en mi controller normal Product dejar solo el index y show, (y los privates)
+y luego pegar en mi nuevo admin/product los strongs params.
+
+arreglar rutas agregando _path(admin_porduct) product según, y donde sea necesario, para que te mande a rutas DENTRO del admin.
+
+GEMAS PARA ENCHULAR
+
+gema entypo?
+gema boostrap
+
+
+//hacerme un resource con el carro (q tiene misma relacion que reviews
+                                    ) tabla intermedia es el carro de products con user.
+
+number_to_currency (convierte el valor dolar a precio) metodo pa ponerlo en los precios.
+
+//////////////////clases miercoles 28 oct/////////////////
+
+Gema CARRIERWAVE
+	para instalar imágenes
+gem 'carrierwave'
+
+https://github.com/carrierwaveuploader/carrierwave
+
+$ rails g uploader NombredelCampo //en este caso $ rails g uploader Image
+
+y ahora dentro de la carpeta app/uploader
+se crea uploader.
+
+- No olvidar poner image(o nombre del campo) en los strong params del controllern(product en este caso)
+
+-luego poner .gitignore poner la ruta /public/uploads
+(que es para que lo ignore, para que no te suba por ahora )
+
+-descomentar metodo en app/uploader/image_uploader
+def extension_white_list
+    %w(jpg jpeg gif png)
+end
+
+
+- Ahora debemos montar el uploader en el modelo en el que vamos a subir imagenes.
+en este caso en el modelo Producto:
+
+mount_uploader :image, ImageUploader
+mount_uploader :nombrecampo, nombremodelomigracion
+
+
+- en el formulario (_form) ahora ya no es un text.file, es un file.field
+
+ponerlo en el show:
+//////////////
+<p>
+<%= image_tag @product.image, alt: @product.name, class: 'product_image' %>
+</p>
+
+>/////
+Agregar el form al views/admin/products , el form de que tenia del form antes.
+y agregar este en el para crear un nuevo producto
+/////////
+<div class="field">
+    <%= f.label :image %><br>
+    <%= f.file_field :image %>
+    <%= f.hidden_field :image_cache %> //para que en caso de que alguna validacion falla al estar creando, no me diga que tengo que downlear y elegir nuevamente la imagen al recagar el error.
+  </div>
+  >/////////////////
+
+  -en App/uploader/mage:upleader
+
+  descomentar
+  include CarrierWave::MiniMagick
+
+	GEMA MiniMagick
+  y agregar gem 'mini_magick' // la instalas arriba de carrierwevae (justo arriba de developer)
+Pero ANTES de usar minimagick hay que inatalar
+
+$ brew install imagemagick // a nivel consola
+
+
+
+
+
+
+
+
+# A MANOLI PRIMERO
+
+# $ rails g migration addImageToProduct image:string
+# $ rails db:migrate
+
+
+
 
 
