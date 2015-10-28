@@ -420,7 +420,7 @@ encambio el destroy si lo ejecuta.
 PARA EJECUTAR UN SEED
 
 	rake db:drop
-	rake deb:create
+	rake db:create
 	rake db:migrate
 	rake db:seed
 
@@ -867,7 +867,7 @@ luego en views cree la carpeta shared y en ella esta vista PARCIAL, llamada siem
 
  <div class="field">
     <%= f.label :name %><br />
-    <%= f.text_field :name %>
+    <%= f.text_field :name, autofocus: true %>
   </div>
 
  <div class="field">
@@ -880,6 +880,8 @@ luego en views cree la carpeta shared y en ella esta vista PARCIAL, llamada siem
     <%= f.text_field :user_name %>
   </div>
 
+
+// Y AGREGARLO TB EN LA VISTA devise/registration/edit.html.erb (estos 3 nuevos params name, lastname, username)
 >////////////////// o como tenia en su totalidad JuanCri en movie data
 <h2>Sign up</h2>
 
@@ -940,6 +942,7 @@ AGREGAR CAMPO ROLE A UN MODELO
 $ rails g migration addRoleToUser role:integer
 $ rake db:migrate
 
+
 COMO CREAR EL ENUM
 
 generar como le digo a un campo que se comporte como un enum, se coloca role, para que ese nombre del campo tratalo como un enum, en este caso como un arreglo,(y son numeros xq son los indices del arreglo.)
@@ -972,7 +975,7 @@ class AddDefaultRoleToUser < ActiveRecord::Migration
     change_column :users, :role, :integer, default: 2, null: false //default: 2  es dos, pq quiero q mi default sea user (depende del orden con que YO hago mi arreglo, el indice 2 es user,)
   end
   def down
-    change_column :users, :role, :integer, default: nil //:users es el nombre de la tabla a la que quiero cambiar.
+    change_column :users, :role, :integer, default: nil, null:true //:users es el nombre de la tabla a la que quiero cambiar. EL down es cdo haga el rollback se hace y quieres volver todo a como estaba antes.
   end
 end
 
@@ -1020,14 +1023,15 @@ en modelo USER
 has_many :movies, dependent: :destroy
 has_many :reviews, dependent: :destroy
 
-validates :username, uniqueness: { case_sensitive: false }
-# validate :validate_username
+validates :username, uniqueness: { case_sensitive: false } //es hace que no importe si el nombre fue escrito con mayuscula o minuscula, que los pesque igual.
+validate :validate_username ////este metodo es para que tu nombre de usuario no sea tu mail.
+OJO que VALIDATE sin 's', es cuando valido un metodo creado por mi.
 
-# def validate_username
-#     if User.where(email: username).exists?
-#       errors.add(:username, :invalid)
-#     end
-#   end
+def validate_username
+    if User.where(email: username).exists?
+      errors.add(:username, :invalid)
+    end
+  end
 
   def to_s
     "#{self.name} #{self.lastname}"
@@ -1567,42 +1571,73 @@ de cambiar el idioma y buscar rails localization luego internalization. (rails i
 # descomentar esta línea: config.secret_key = '72f8af7fceaf4609accf79f43f21aa5edc72a36fa7573b01f79e10bb010e6f7512bdfd6d327a5ec35e29544d4e87ffd9e495dc47612537924697cb075942ff5d'
 
 USER
-Para hacer user se hace con la gem 'devise' y se le agrega gem 'cancancan'
+	Para hacer user se hace con la gem 'devise' y se le agrega gem 'cancancan'
 
 
 
 GIT
 
-atlassian.com/git/tutorials
+	atlassian.com/git/tutorials
 
 
 NAMESPACE: (para hacer el admin, administrador de la app)
 
-$ rails g controller admin/prodcuts => el hecho de escribirlo asi me va a crear inmediatamente el namespace (admin/(slash)NombreController) (para crear el controller dentro de la carpeta admin)
+	$ rails g controller admin/prodcuts => el hecho de escribirlo asi me va a crear inmediatamente el namespace (admin/(slash)NombreController) (para crear el controller dentro de la carpeta admin)
 
-$ rails g controller admin/prodcuts campo!:naturaleza etc //tb se puede poner solo index o show, o tb hacer un scaffold de ello
+	$ rails g controller admin/prodcuts campo!:naturaleza etc //tb se puede poner solo index o show, o tb hacer un scaffold de ello
 
-las rutas se agregan a mano, por que está nested (admin/...) dentro de una carpeta.
+	las rutas se agregan a mano, por que está nested (admin/...) dentro de una carpeta.
 
 NUEVAMENTE METODO DE INSTANCIA O METODO DE CLASE
 
-cdo es metodo de clase se le agrega el SELF. en el nombre del metodo, ejemplo:
-def self.product // esto es un método de clase.es decir lo puedes llamar "Clase.product"
-end
+	cdo es metodo de clase se le agrega el SELF. en el nombre del metodo, ejemplo:
+	def self.product // esto es un método de clase.es decir lo puedes llamar "Clase.product"
+	end
 
-El método de clase puede ser usado para la clase y para una coleccion de cosas de la clase, ejemplo class Cars.
-=> Cars.product, cars.product (cdo es coleccion, carsssssssss)
-Pero NUNCA para 1 sola instancia.
+	El método de clase puede ser usado para la clase y para una coleccion de cosas de la clase, ejemplo class Cars.
+	=> Cars.product, cars.product (cdo es coleccion, carsssssssss)
+	Pero NUNCA para 1 sola instancia.
 
-metodo de instancia nombre y definicion normal y se usa para una instancia.
-def product
-	self.role
-end
+	metodo de instancia nombre y definicion normal y se usa para una instancia.
+	def product
+		self.role
+	end
 
-y dentro de este puedes utilizar el self.role para llamar a la instancia especifica.
+	y dentro de este puedes utilizar el self.role para llamar a la instancia especifica.
 
-// PUEBA: Crear los todos los modelos y sus relacion pa llegar donde pato., falta hacer views de reviews y likes.
+	// PUEBA: Crear los todos los modelos y sus relacion pa llegar donde pato., falta hacer views de reviews y likes.
 
 
 AÑADIR UN SOLO CAMPO A UN MODELO:
-$ rails g migration AddQuantityToOrder (ejemplo),$ rails g migration AddNombreCampoToModel nombrecampo:tipoDato
+	$ rails g migration AddQuantityToOrder (ejemplo),$ rails g migration AddNombreCampoToModel nombrecampo:tipoDato
+
+
+PARA HACER UN CAMPO CON DECIMALES // ejemplo campo Price:
+	'price:decimal{10,2}' // rails g model 'price:decimal{10,2}' improtante que sea dentro de ''
+
+SHORTCUTS SUBLIME
+
+cmd+w = cerrar archivo en que estas
+cmd+p = buscar el archivo que quieres abrir
+
+
+PARA EDITAR MIGRACION A MANO (no en rollback)
+	debo botar mi db
+	rake db:drop
+	rake db:create
+	rake db:migrate
+	rake db:seed
+	(EN ESTE CASO NO HACER rake db:setup)
+
+SIno hacer las cantidad de rollback necesarios y borrar y hacer nueva,ente ESA migracion especifica.
+
+rake db:rollback step = 5
+y en caso de hacer rollback se puede agregar a mano, para NO tener que borrarla (en todo caso no importa el orden puedes volver a generarla aunque sea ultimo lugar.)
+
+CREAR UN MODEL Y UN CONTROLLER JUNTOS CON RESOURCE
+
+$ rails g resource Review campo1:tipo product:references
+
+y me crea el modelo, el controlador (vacío) y la vista reviews (vacía) // en este ejemplo con el campo1 y la foreign key de product para relacion uno es a muchos de product con review
+
+
