@@ -1092,7 +1092,7 @@ end
 
 COMO HAGO PARA GUARDAR EL USER EN LA CREACION DE UNA PELI
 
-debo modificar controller y pasa en el create.Entonces añado una línea en ese método.
+debo modificar controller movie y pasa en el create.Entonces añado una línea en ese método.
 def create
 	@movie.user = current_user if user_signed_in?
 end
@@ -1177,7 +1177,7 @@ CANCANCAN
 	luego =>
 	$ bundle
 	luego =>
-	$ rails g cancan:ability (1-)
+	$ rails g cancan:ability (pilar 1-)
 
 
 	entonces ahora veremos la revisión de habilidades:
@@ -1527,3 +1527,5 @@ def product
 end
 
 y dentro de este puedes utilizar el self.role para llamar a la instancia especifica.
+
+// PUEBA: Crear los todos los modelos y sus relacion pa llegar donde pato.
