@@ -1360,10 +1360,22 @@ PARA CREAR UN LIKE EN LA CONSOLA RAILS
 
 luego debo agregarle la RUTA (con member en rutas) //
 
-member do
- 	get 'like'
-end
-//////
+  resources :movies do
+    resources :reviews, only: [:create] do
+      member do
+        get 'like'
+      end
+    end
+
+    member do
+      #post 'set_genre'
+      get 'like'
+    end
+
+    collection do
+      #post 'set_genres'
+    end
+  end//////
 
 luego agregarla a la VISTA show de post (o correspondiendte)//
 
