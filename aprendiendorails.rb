@@ -358,7 +358,7 @@ HACER RELACION DE 1-* //AGREGANDO UNA FOREIGN KEY
 	 (CON MIGRACIONES)
 	agregando migraciones:
 
-	$ rails g migration addPostReftoComment post:references (aqui estoy agregando un foreign key en comment de post)
+	$ rails g migration addPostRefToComment post:references (aqui estoy agregando un foreign key en comment de post)
 
 	luego de hacer una migracion se crea una base
 	rake db:create // esto para postgresql ( y solo se crea una sola vez y con el nombre de tu proyecto mas _development (osea en este caso seria Blog_developtment para buscarla dentro de la consola en psql))
@@ -1007,8 +1007,8 @@ AHORA HACER LA RELACION DE USER A MOVIES Y REVIEWS UNO A ES MUCHOS
 	    add_reference :movies, :user, index: true, foreign_key: true
 	  end
 	end
-	///esta para movie $ rails g migration AddUserRefToMovie y luego lo mismo para review.
-	AddUserRefToReview
+	///esta para movie $ rails g migration AddUserRefToMovie user:references y luego lo mismo para review.
+	AddUserRefToReview user:references
 
 	class AddUserRefToReview < ActiveRecord::Migration
   def change
@@ -1602,3 +1602,7 @@ end
 y dentro de este puedes utilizar el self.role para llamar a la instancia especifica.
 
 // PUEBA: Crear los todos los modelos y sus relacion pa llegar donde pato., falta hacer views de reviews y likes.
+
+
+AÑADIR UN SOLO CAMPO A UN MODELO:
+$ rails g migration AddQuantityToOrder (ejemplo),$ rails g migration AddNombreCampoToModel nombrecampo:tipoDato
