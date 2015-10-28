@@ -1287,6 +1287,13 @@ $ rake db:migrate
 
 Esta te crea el likeable_id y el likeable_type. de una.
 
+	EN CASO DE QUE EL MODELO LIKE YA ESTUVIERA CREADO
+		$ rails g migration AddLikeableToLike likeable:likeable:references{polymorphic}
+
+		y borrar el campo que te sobre para crear la poliformica
+		$ rails g migration RemoveNombreCAmpoFromModel nombrecampo:tipo
+		$ rails g migration RemoveMovieFromLike movie:references //ejemplo.
+
 luego el modelo like queda:
 class Like < ActiveRecord::Base
   belongs_to :user
@@ -1298,7 +1305,7 @@ end
 Entonces tendremos que decir al MODELO movie y review esto:
 
 has_many :likes, as: :likeable // tiene muchos likes a travez  de la tabla poliformica
-has_many :user_likes, through: :likes, source: :user //como ya se esta usando :user en este modelo se le pone :user_like (pero la verdadera fuente es :user)
+has_many :user_likes, through: :likes, source: :user //como ya se esta usando :user en este modelo se le pone :user_like (pero la verdadera fuente es :user, solo user luego lee pa ver para los otros modelos.)
 
 MODELO DE POST
 class Post < ActiveRecord::Base
@@ -1308,21 +1315,26 @@ class Post < ActiveRecord::Base
   	belongs_to :user // aqui ya esta usado el :user *
 
   	has_many :likes, as: :likeable
-  	has_many :user_likes, through: :likes, source: :user // * por eso aqui se pone user_likes
+  	has_many :user_likes, through: :likes, source: :user // * por eso aqui se pone user_likes y se pone source xq invente el user_likes de donde vien? de user
 
 	validates :title, presence: true
 	validates :content, presence: true
 end
 
-//////HOLA ALFREDOOOO
+	//////HOLA ALFREDOOOO
+	Paréntesis:
+	(ahora al agregar el metodo user_likes)
+	en la consola Product.new.likes // me devuelve la cantidad de likes
+	Product.new.user_likes // me devuelde los USERS.
+	/////////////
 
 Lo mismo para reviews.
 
 y para el modelo USER se pone (en el ejemplo de post y comment)
 
-has_many :likes, as: :likeable
-has_many :post_likes, through: :likes, source: :post
-has_many :comment_likes, through: :likes, source: :comment
+has_many :likes // aquí no se pone el as: :likeable xq al usuario no se le pueden poner likes
+has_many :post_likes, through: :likes, source: :likeable, source_type: 'Post'
+has_many :comment_likes, through: :likes, source: :likeable, source_type: 'Comment' //solo user se pone source user, xq ahi quedan, pero aqui estan en la columna likeable y del tipo que uno busque.
 
 ////////////////////////MOdelo USER/////////////
 class User < ActiveRecord::Base
@@ -1336,9 +1348,9 @@ class User < ActiveRecord::Base
   has_many :comments
   has_many :posts
 
-  has_many :likes, as: :likeable
-  has_many :post_likes, through: :likes, source: :post
-  has_many :comment_likes, through: :likes, source: :comment
+  has_many :likes,
+  has_many :post_likes, through: :likes, source: :likeable, source_type: 'Post'
+  has_many :comment_likes, through: :likes, source: :likeable, source_type: 'Comment'
 
   enum role: [:admin, :editor, :basic, :guest]
 
@@ -1631,7 +1643,7 @@ PARA EDITAR MIGRACION A MANO (no en rollback)
 
 SIno hacer las cantidad de rollback necesarios y borrar y hacer nueva,ente ESA migracion especifica.
 
-rake db:rollback step = 5
+rake db:rollback STEP=5
 y en caso de hacer rollback se puede agregar a mano, para NO tener que borrarla (en todo caso no importa el orden puedes volver a generarla aunque sea ultimo lugar.)
 
 CREAR UN MODEL Y UN CONTROLLER JUNTOS CON RESOURCE
