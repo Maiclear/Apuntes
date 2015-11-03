@@ -1739,7 +1739,25 @@ Pero ANTES de usar minimagick hay que inatalar
 
 $ brew install imagemagick // a nivel consola
 
+-luego agrego gema y bundle
+-luego descomento en App/uploader/mage:upleader y agrego estas lineas
 
+process :resize_to_fit => [1000, 1000]
+  # Create different versions of your uploaded files:
+version :thumb do
+  process :resize_to_fill => [150, 150]
+end
+
+-poern una imagen por defecto (default_url)
+descomentar el metodo App/uploader/mage:upleader
+def default_url
+	# "/images/fallback/" + [version_name, "default.jpg"].compact.join('_')
+	ActionController::Base.helpers.asset_path("fallback/" + [version_name, "default.jpg"].compact.join('_'))
+end
+//entonces en la carpema image crear carpeta fallback y agregar tu imagem default.
+
+
+poenr en strong params 'remote_image_url' (por el faker del juancri).
 
 
 
@@ -1753,5 +1771,106 @@ $ brew install imagemagick // a nivel consola
 
 
 
+//////////clases lunes 2 nov
+
+MAILER
+
+SIstema de envios de correos en rails
+PAra mandar mail.
+
+primeros no creamos el primer mailer (para mandar correos al usuario)
+
+$ rails g mailer UserMailer
+
+lo que nos crea una especie de controllador (llamado mailler), vacio, que tiene asignada tb unas vistas.
+
+luego en UserMailer de nuestro mailer (que es como nuestro controlador)
+
+class UserMailer < ApplicationMailer
 
 
+def welcome_email user
+	@user = user
+	@url = 'www.wareviustore.com'
+
+	mail(
+	     to:@user.email,
+	     subject:'Bienvenido a Wareviustore'
+	     template_path: 'user_mailer'
+	     template_name: 'welcome_email' //estos son opcionales (y el nombre depende del nmbre que yo le ponga a mi archivo (ojo que estas son mis rutas.))
+	     )
+end
+
+y en
+
+class ApplicationMailer < ApplicationMailer
+	default: from: 'warevius@gmail.com'
+	layout 'mailer'
+
+
+Dentro de views, de user_mailer
+
+creamos un nuevi archivo llamado:
+welcome_email.html.erb
+
+dentro de el escribimos (para tener un template)
+
+<h1>Bienvenido a <%= @url %>, <%= @user %> </h1>
+<p> Te has registrado correctamente. Tu nombre de usuario es <%= @user.user_name %> </p>
+<p>Para loguearte en el sitio solo sigue el siguiente link: <%= @url %></p>
+<p>Gracias por registrarte</p>
+
+<p>Atentamente, el equipo de WareviuStore.</p>
+
+
+y para nuestro texto plano va lo mismo pero sin el html. en nuevo archivo creado llamado
+welcome_email.text.erb
+
+Bienvenido a <%= @url %>, <%= @user %>
+====================================================================
+
+Te has registrado correctamente. Tu nombre de usuario es <%= @user.user_name %>
+Para loguearte en el sitio solo sigue el siguiente link: <%= @url %>
+Gracias por registrarte
+
+Atentamente, el equipo de WareviuStore.
+
+AHORA EN MODELO USER
+
+poner ariibita (abajo del before_save)
+after_create :send_welcome_email
+
+hacer metodo:
+
+def send_welcome_email
+	UserMailer.welcome_email(self).deliver_now
+end
+
+deliver_now //envia el mail y te estanca el proceso
+deliver_later //te envia el mail un tiempo despues.
+
+ahora vamos al config/enviroment/development:
+hacemos una configuracionc con cmtp (lo ponemos bajo action mailer de local host)
+que se envien los correos:
+
+-config.action_mailer.delivery_method = :sendmail /
+-config.action_mailer.raise_delivery_errors = true //ponerle TRUE a esta línea
+-config.action_mailer.default_otions = {from: 'warevius@gmail.com'} // y se poner aqui lo configuro a nivel de aplicacion
+SMTP
+-config.action_mailer.delivery_method = :smtp
+-config.action_mailer.smtp_sttings = {
+	address: 'smtp.gmail.com',
+	port: 587,
+	domain: 'gmail.com'
+	user_name: '',// poner el nombre de usuario de tu gmail + @gmail.com,
+	password:,
+	authentication: 'plain',
+	enable_starttls_auto: true
+}
+
+
+
+//////// ejemplo de controlador de ORDER
+en el metodo paid_order agregar q se mande el correo.
+
+-UserMailer.welcome_email(current_user).deliver_later
