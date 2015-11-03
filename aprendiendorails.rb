@@ -1855,15 +1855,15 @@ que se envien los correos:
 
 -config.action_mailer.delivery_method = :sendmail /
 -config.action_mailer.raise_delivery_errors = true //ponerle TRUE a esta línea
--config.action_mailer.default_otions = {from: 'warevius@gmail.com'} // y se poner aqui lo configuro a nivel de aplicacion
+-config.action_mailer.default_options = {from: 'warevius@gmail.com'} // y se poner aqui lo configuro a nivel de aplicacion
 SMTP
 -config.action_mailer.delivery_method = :smtp
--config.action_mailer.smtp_sttings = {
+-config.action_mailer.smtp_settings = {
 	address: 'smtp.gmail.com',
 	port: 587,
-	domain: 'gmail.com'
-	user_name: '',// poner el nombre de usuario de tu gmail + @gmail.com,
-	password:,
+	domain: 'gmail.com',
+	user_name: 'ejerciciobootcamp@gmail.com',// poner el nombre de usuario de tu gmail + @gmail.com,
+	password:'',
 	authentication: 'plain',
 	enable_starttls_auto: true
 }
@@ -1874,3 +1874,70 @@ SMTP
 en el metodo paid_order agregar q se mande el correo.
 
 -UserMailer.welcome_email(current_user).deliver_later
+
+
+
+PARA ENVIAR MAIL AL ADMINISTRADOR
+
+confirmation order(order)
+
+
+///////////clase MARTES 3 NOV
+
+PROBLEMA QUERY n+ 1
+
+
+
+*.USAR INCLUDES ADEMAS DE TPDAS LAS LINEAS QUE USAS ES UN AGREGADO.*
+
+	una solution : Eager loeding.
+
+	en rails existe un helper que se llama 'includes'
+
+	ejemplo de categories de productos:
+
+	@prodcuts = Prodcuts.all.includes(:category)
+
+
+	Gema BULLET.
+
+	(ejemplo de queries de l app que hizo juancri de twitter)
+
+	gem 'bullet'
+
+	https://github.com/flyerhzm/bullet
+
+	 y en config/enviroment/develoment.rb
+
+	 config.after_initialize do
+		  Bullet.enable = true
+		  Bullet.alert = false (este era el pop up que mando)
+		  Bullet.console = true
+		  Bullet.add_footer = true
+
+			end
+
+	esto hace que te mande donde pones el 'includes', te dice donde podria estar el error de los queris n + 1.
+
+	el Count siempre te va a gatillar un query a pesar de que uses un includes (ojo que la gema tb te avisa cdo usas un icludes innecesariamente).
+	Ojo en caso de contar tweets es mas efectivo usar el COUNT , xq lo hace en la base de datos, el lenght hace una seleccion y luego hace un conteo.
+	Pero con el Lenght si puedo usar el includes.
+	el SIZE te pide use un counter_cache (que dice el juancri q es el mejor a su pensar), este se crea al crear el tweet o grabarlo, no al pedir el conteo, ya está ahñi esperando.
+
+		COUNTER_CACHE:
+
+			Y se hace con una migracion
+
+			$ rails g migration addCounterCacheToUser tweets_count:integer
+
+
+			y en el modelo de tweet:
+
+			belongs_to: user, counter_cache: true // aqui le estamos diciendo que se comporte como counter_cache.
+
+luego reseteo el conteo?
+en consola escribo:
+
+			User.find_each do |user|
+				User.reset_counters(user.id, :tweets)
+			end
