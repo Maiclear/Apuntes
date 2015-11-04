@@ -1865,7 +1865,7 @@ SMTP
 	domain: 'gmail.com',
 	user_name: 'ejerciciobootcamp@gmail.com',// poner el nombre de usuario de tu gmail + @gmail.com, // PERO AQUI SE CREAN LAS VARIABLES DE ENTORNO
 	password:'LaSuperClave', // AQUI TB VAN VARIABLES DE ENTORNO (explicado abajo)
-	authentication: 'plain',
+	authentication: :login,
 	enable_starttls_auto: true
 }
 
@@ -1883,7 +1883,8 @@ VARIABLES DE ENTORNO:
 	 y agregar un archivo llamado .env ( a mano) //todos los archivos con . anterios son ocultos
 	 luego en GITIGNORES agregar la línea .env
 
-	 luego en ARCHIVO .ENV declaro mis variables de entorno
+	 luego en ARCHIVO .ENV declaro mis variables de entorno (y en el archivo contiene SOLO esto:)
+
 	 	GMAIL_USERNAME=ejerciciobootcamp@gmail
 	 	GMAIL_PASSWORD=LaSuperClave
 
@@ -1891,6 +1892,23 @@ VARIABLES DE ENTORNO:
 
 	 user_name: ENV['GMAIL_USERNAME']
 	 password: ENV['GMAIL_PASSWORD']
+
+
+PARA VER EL MAIL POR LOCALHOST
+	vas a TEST/MAILERS/PREVIEWS/User_Mailer_Preview
+	escribir en class UserMailerPreview que estara vacia
+
+class UserMailerPreview < ActionMailer::Preview
+  def welcome_email_preview
+    UserMailer.welcome_email(User.last)
+  end
+end
+
+y en config/enviroment/development: agregar la linea :
+-config.action_mailer.perform_deliveries = false
+true para base development para enviar mails de pruebas pero luego ponerla en false
+
+
 
 
 PARA ENVIAR MAIL AL ADMINISTRADOR
@@ -1973,4 +1991,80 @@ en consola escribo:
 				User.reset_counters(user.id, :tweets)
 			end
 
+
+/////////////////Clases 4 Nov /////////////////
+Descomentar GEMA SASS!!!! para actve ADMIN.
+
+GEMA ACTIVEADMIN
+
+http://activeadmin.info/
+https://github.com/activeadmin/activeadmin
+
+gem 'activeadmin'
+
+añadiendola de esta manera:
+gem 'activeadmin', github: 'activeadmin'
+
+o de esta manera: se copia esto en el gemfile
+gem 'activeadmin', '~> 1.0.0.pre2' //esta le gusta a JuanCrip, se pone despues de devise (no en dev ni en prod)
+
+$ bundle
+$ rails g active_admin:install // esto va a instalar active admin en mi compu y me va a crear un ususario
+// rails g active_admin:install --skip-users // esta opcion se pone cdo
+
+$ rake db:migrate
+$ rake db:seed
+
+antes del seed arreglar en archivo seed la nueva línea de ser necesario.
+
+y en:
+http://localhost:3000/admin/login
+
+para entrar
+usuario: admin@example.com
+pass: password.
+
+
+ESTILOS: OJO QUE EN:
+
+app/assets/stylesheets
+
+*=require_tree // esto te dice que lea todos los archivos q esten en el styleshett en orden
+*=require_self // va a carga lo que esta escrito dentro del mismo archi en que pones esa línea (osea que escribas algo despues.por ejemplo)
+
+ahora escribir *= stub active_admin (para saltar el estilo del active admin en el estilo)
+
+OJO QUE AL AÑADIR EL ACTIVE ADMIN LOS SCAFFOLD SE VAN A LA MIERYI!!!!!
+los que se hagan luego de activar la gema.
+esto se arregla de la siguiente manera:
+
+dentro de config/aplication.rb
+ante de que se cierre el  class Application < Rails::Application
+
+escribimos:
+
+	config.generators do |g|
+        g.scaffold_controller 'scaffold_controller' //*******
+    end
+
+
+BAJO ESTA LINEA: ¬
+ config.active_record.raise_in_transactional_callbacks = true
+
+    config.generators do |g|
+        g.scaffold_controller 'scaffold_controller' // AQUI!!*****
+    end
+  end
+end
+
+
+LUEGO en config/initializer/active_admin.rb
+en caso de usar CANCAN
+abitilamos esto:
+config.authorization_adapter = ActiveAdmin::CanCanAdapter
+
+
+config/initializer/active_admin.rb aqui tu administras todo loq eu sale en las vistas y como queires, loq ue quieres que te muestre , por ejemplo que no salgan los comments, que esten ordenados de x manera...etc... eso lo haces descomentando las cosas y manoseandolas. jjjjj y ahí mismo podrías diseñar tu propio stylesheet. pero que paja.
+
+Ahi tu ves lo del cvs y la subida de base de datos, por como, separacion de comas, etc.
 
