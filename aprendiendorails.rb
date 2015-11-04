@@ -1804,7 +1804,7 @@ end
 y en
 
 class ApplicationMailer < ApplicationMailer
-	default: from: 'warevius@gmail.com'
+	default: from: 'ejerciciobootcamp@gmail.com '
 	layout 'mailer'
 
 
@@ -1850,6 +1850,7 @@ deliver_now //envia el mail y te estanca el proceso
 deliver_later //te envia el mail un tiempo despues.
 
 ahora vamos al config/enviroment/development:
+
 hacemos una configuracionc con cmtp (lo ponemos bajo action mailer de local host)
 que se envien los correos:
 
@@ -1862,8 +1863,8 @@ SMTP
 	address: 'smtp.gmail.com',
 	port: 587,
 	domain: 'gmail.com',
-	user_name: 'ejerciciobootcamp@gmail.com',// poner el nombre de usuario de tu gmail + @gmail.com,
-	password:'',
+	user_name: 'ejerciciobootcamp@gmail.com',// poner el nombre de usuario de tu gmail + @gmail.com, // PERO AQUI SE CREAN LAS VARIABLES DE ENTORNO
+	password:'LaSuperClave', // AQUI TB VAN VARIABLES DE ENTORNO (explicado abajo)
 	authentication: 'plain',
 	enable_starttls_auto: true
 }
@@ -1875,11 +1876,41 @@ en el metodo paid_order agregar q se mande el correo.
 
 -UserMailer.welcome_email(current_user).deliver_later
 
+VARIABLES DE ENTORNO:
+	 Agragr la gema dotenv_rails
+	 gem 'dotenv_rails'
+
+	 y agregar un archivo llamado .env ( a mano) //todos los archivos con . anterios son ocultos
+	 luego en GITIGNORES agregar la línea .env
+
+	 luego en ARCHIVO .ENV declaro mis variables de entorno
+	 	GMAIL_USERNAME=ejerciciobootcamp@gmail
+	 	GMAIL_PASSWORD=LaSuperClave
+
+	 y ahora en config/enviroment/development:
+
+	 user_name: ENV['GMAIL_USERNAME']
+	 password: ENV['GMAIL_PASSWORD']
 
 
 PARA ENVIAR MAIL AL ADMINISTRADOR
 
 confirmation order(order)
+
+ACTIVE JOB, GEM SUCKER_PUNCH.
+
+para que resulte la "cola" y el deliver_later funcione distinto a deliver_now
+para eso esusamos unas gemas por ejemplo la gema sucker_punch
+
+gem 'sucker_punch'
+
+y en config/enviroment/development ///development solo a modo de desarrollod pero en verdad es en production
+agregar esta línea:
+
+config.active_job.queue_adapter = :sucker_punch
+
+
+
 
 
 ///////////clase MARTES 3 NOV
@@ -1941,3 +1972,5 @@ en consola escribo:
 			User.find_each do |user|
 				User.reset_counters(user.id, :tweets)
 			end
+
+
