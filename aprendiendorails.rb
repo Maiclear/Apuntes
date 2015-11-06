@@ -2010,7 +2010,7 @@ gem 'activeadmin', '~> 1.0.0.pre2' //esta le gusta a JuanCrip, se pone despues d
 
 $ bundle
 $ rails g active_admin:install // esto va a instalar active admin en mi compu y me va a crear un ususario
-// rails g active_admin:install --skip-users // esta opcion se pone cdo
+// rails g active_admin:install --skip-users // esta opcion se pone cdo quiero que se salte que me cree un usuario
 
 $ rake db:migrate
 $ rake db:seed
@@ -2067,4 +2067,181 @@ config.authorization_adapter = ActiveAdmin::CanCanAdapter
 config/initializer/active_admin.rb aqui tu administras todo loq eu sale en las vistas y como queires, loq ue quieres que te muestre , por ejemplo que no salgan los comments, que esten ordenados de x manera...etc... eso lo haces descomentando las cosas y manoseandolas. jjjjj y ahí mismo podrías diseñar tu propio stylesheet. pero que paja.
 
 Ahi tu ves lo del cvs y la subida de base de datos, por como, separacion de comas, etc.
+
+
+RECURSO
+
+	un recurso son las vista que tendremos dentro de active_admin, pero para poder crearme un recurso tendremos que tener un modelo asociado. (un modelo creado antes)
+
+	$ rails g active_admin:resource Product //esto me crea un recurso con el nombre del modelo Product.
+
+
+	CONFIGURANDO MIS RECURSOS
+
+		STRONG_PARAMS
+			Acitve_Admin utiza sus propios params, debemos setear los permited params =>
+			entonces debemos descomentar en nuestro RECURSO Product.rb los permit_params:
+
+			permit_params :name, :description, :price, :stock, :category, :image
+
+		COSTUMIZAR EL MENU
+			en RECURSO 	Product.rb escribir por ejemplo:
+
+			menu label: 'Productos' //para cambiar el nombre de mi recurso en el dashbord
+			menu label: 'Productos', priority: 2 //orden , que "Productos" quede en el segundo lugar (por defecto el primer recurso que me creo es 10, y luego por orden de llegada. entonces por ejemplo AdminUser era 10, entonces debo ir a su RECURSO y escribir menu priority: n, para nuevo orden.)
+
+
+otro ejemplo en recurso USER,en user.rb
+ACtveAdmin.reguster User do
+			menu label: 'Clientes', parent: 'Usuarios' // aqui hice un dropdown donde deje a mis user llamados 'clientes' dentros de un boton llamados usuarios, luego por ejemplo puedo ir a mi AdminUser y decirle lo mismo parent: 'Usuarios'
+			y habra un dropdown del boton usuraios: -Clientes
+													-AdminUser
+			actions :all, except: [:edit, :update, :destroy] // aqui digo que se puede hacer todas las aciciones MENOS editarlo, updatearlo y eliminarlo.
+
+
+PARA MODIFICAR LA VISTAS DE MIS RECURSOS NUEVO PRODUCT (en este caso) (en caso de agregar imagenes etc.)
+
+copy paste del recurso admin_user
+
+index do
+    selectable_column
+    id_column
+    column :email
+    column :current_sign_in_at
+    column :sign_in_count
+    column :created_at
+    actions
+  end
+
+
+ y voy editando lo que quiero mostrar //todo loq ue muestra el index
+
+
+ index do
+    selectable_column
+    id_column
+    column 'Image' do |p|
+    	image_tag p.image.thumb //para agregar la imagen.
+    end
+    column :name //modifico
+    column :stock //modifico
+    column :price //modificado
+    actions
+  end
+
+// ahora pra modificar los filtros
+
+  filter :name
+  filter :stock
+  filter :proce
+  filter :category
+
+//ahora el form
+
+form do |f|
+    f.inputs "Product Detalle" do //puedo cambiarle el nombre
+      f.input :name, label: 'Nombre' //para cambiarle el nombre de name a NOMBRE duh!
+      f.input :description
+      f.input :stock
+      f.input :price
+      f.input :image
+    end
+    f.actions
+  end
+
+// AHORA modificamos el SHOW.
+  show do
+  	(puedes renderear las vistas ya credas para los usuarios y modificarlas
+  	y hacer un bello render con copy paste de una vista ya creada y mejorada)
+  	render 'product/_newshow' (pero este NO mantiene el estilo del active_admin)
+end
+  	o hacer una bella tabla
+show do
+  	attributes_table do
+  		row :name
+  		row :description
+  		row :stock
+  		row :price do
+  			number_to_currency product.price
+  		end
+  		row 'Imagen' do
+  			image_tag product.image.thumb
+  		end
+  	end
+  end
+
+
+ahora agregaremos un sidebar: (para jugar xq a nadie le importa tu dolor de cabeza infinito)
+
+	sidebar :links do
+		ul do
+			li do
+				link_to 'NombreLInk'
+			end
+			li do
+				link_to 'NombreLink'
+			end
+		end
+	end
+
+///////////CLaseess JUEVES 5 NOV
+
+COmo integrar active admin con cancan!
+
+hago mi
+gem 'activeadmin', '~> 1.0.0.pre2'
+
+$ bundle
+rails g active_admin:install --skip-users //para que NO me cree un ususario ya que tego uno con devise y cancan
+
+no se me crea un seed de user como antes.
+
+rake db:migrate
+
+en active_admin.rb, cambiar la cuenta por
+:destroy_user_session_path
+
+y decomento línea
+
+config.logout_link_method = :delete (aqui cambio delete por el get que venía por defecto xq se cambiaron las rutas)
+
+
+en cancna en ability.rb
+
+le agregamos una habilidad:...oh me perdi...te fuiste a la mieryi....
+
+en el active_admin.rb tu puedes configurar toodo y para tu weveo.
+puedes configurar el nombre de tu pagina y hacerle que se link  poniendole un '\'
+(\ solo te lleva al root, \warwver te lleva al warever path...etc)
+'
+
+SCOPES : (botones de filtrado)
+
+PARA HACER BOTONES EN LAS VISTAS DEL ACTIVE ADMIN PRA FILTRADO
+
+entonces en user.rb
+
+scope :all, default: true // aqui me muestra a todos
+scope 'Admins', :admin //aquí me filtra mostrando solo a los admin
+scope 'Clientes', :client // aqui me filtra mostrando solo a los clientes
+
+
+//////
+Batch ACTION: //esto se muestra dentro de la vista del ActiveAdmin
+por defecto este viene con un destroy que uno se lo saca al poner por ejemplo en user.rb
+
+actions :index, :show //y borrar :destroy
+
+y me creo por ejemplo algo para cambiar de roles (jugando)
+
+batch_action :change_role do |ids|
+	batch_action_colletion.find(ids).each do |user|
+		if user.admin?
+			user.client!
+		elsif user.client!
+			user.admin!
+		end
+	end
+	redirect_to collection_path, alert: 'Roles cambaido!!!'
+end
 
