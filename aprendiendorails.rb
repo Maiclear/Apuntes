@@ -1709,9 +1709,9 @@ mount_uploader :image, ImageUploader
 mount_uploader :nombrecampo, nombremodelomigracion
 
 
-- en el formulario (_form) ahora ya no es un text.file, es un file.field
+- en el formulario (_form) ahora ya no es un text.file, es un file.field *********
 
-ponerlo en el show:
+ponerlo en el show
 //////////////
 <p>
 <%= image_tag @product.image, alt: @product.name, class: 'product_image' %>
@@ -1723,7 +1723,7 @@ y agregar este en el para crear un nuevo producto
 /////////
 <div class="field">
     <%= f.label :image %><br>
-    <%= f.file_field :image %>
+    <%= f.file_field :image %> //>********
     <%= f.hidden_field :image_cache %> //para que en caso de que alguna validacion falla al estar creando, no me diga que tengo que downlear y elegir nuevamente la imagen al recagar el error.
   </div>
   >/////////////////
@@ -1742,7 +1742,7 @@ $ brew install imagemagick // a nivel consola
 -luego agrego gema y bundle
 -luego descomento en App/uploader/mage:upleader y agrego estas lineas
 
-process :resize_to_fit => [1000, 1000]
+process :resize_to_fit => [1000, 1000] // este se cambia :scale por el resize_to_fit
   # Create different versions of your uploaded files:
 version :thumb do
   process :resize_to_fill => [150, 150]
@@ -2186,7 +2186,7 @@ ahora agregaremos un sidebar: (para jugar xq a nadie le importa tu dolor de cabe
 
 ///////////CLaseess JUEVES 5 NOV
 
-COmo integrar active admin con cancan!
+COmo integrar active admin con cancan! //aquí falta mucho xq no cahé leer documentación.
 
 hago mi
 gem 'activeadmin', '~> 1.0.0.pre2'
@@ -2245,3 +2245,41 @@ batch_action :change_role do |ids|
 	redirect_to collection_path, alert: 'Roles cambaido!!!'
 end
 
+//////clases viernes
+Documentacion authorization adapter
+active_admin.
+
+me lo creo con --skip xq me cree un user con devise
+
+ahora en ability:
+
+para que otra persona que no se el admin no me entre al active_admin escribo: ***
+
+class Ability
+  include CanCan::Ability
+
+  def initialize(user)
+    user ||=User.new(role: 2)
+
+    if user.admin?
+        can :manage, :all
+    elsif user.normal?
+    can :read, :all
+    can :create, [Post, Comment]
+    can [:edit, :destroy], [Post, Comment], user_id: user.id
+    cannot :manage, ActiveAdmin::Page //***** aqui le restrinjo la entrada al dashbord
+    else
+     can :read, :all
+     cannot :manage, ActiveAdmin::Page //***** aqui le restrinjo la entrada al dashbord
+    end
+
+  end
+end
+
+y hacer metodo en APLICATIOn_controller
+
+private
+
+def acces_denied
+	redirect_to root_url , alert y algo mas que no cacho.....
+end
