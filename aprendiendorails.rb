@@ -2234,7 +2234,7 @@ actions :index, :show //y borrar :destroy
 
 y me creo por ejemplo algo para cambiar de roles (jugando)
 
-batch_action :change_role do |ids|
+batch_action :change_role do |ids| //:change_role (nombre inventado)
 	batch_action_colletion.find(ids).each do |user|
 		if user.admin?
 			user.client!
@@ -2283,3 +2283,35 @@ private
 def acces_denied
 	redirect_to root_url , alert y algo mas que no cacho.....
 end
+
+$ rails g active_admin:resource comment
+
+esto es para crear el recurso de comments, pero te va a tirar un error entonces vas a:
+
+active_admin/commnet.rb y agregas el as: para que se diferencie del comments de active admin
+
+ActiveAdmin.register Comment, as: 'Post Comments' do
+etc...
+
+batch_action (aprobar comentarios)
+
+batch_action :Aprobar do |ids|
+	batch_action_colletion.find(ids).each do |comment|
+		comment.approved!
+		end
+	end
+	redirect_to collection_path, alert: 'gracias por tu!!!'
+end
+
+batch_action :Rechazar do |ids|
+	batch_action_colletion.find(ids).each do |comment|
+		comment.rejected!
+		end
+	end
+	redirect_to collection_path, alert: 'Roles cambaido!!!'
+end
+
+
+
+NESTED FORMS
+
