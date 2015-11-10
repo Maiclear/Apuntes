@@ -2312,6 +2312,81 @@ batch_action :Rechazar do |ids|
 end
 
 
+//////////////Clases lunes 9 NOV ////
 
-NESTED FORMS
+TDD
+TESTING
 
+usaremos una gema llamda mini test (antes llamda test unit? parece)
+rails viene incluido con mini test.
+
+GEM MINITEST
+gem 'minitest'
+$ gem install minitest
+
+me hago una carpeta llamado lib y en el un archivo llamado calculator.rb, donde me creo mi clase Calculator y me creo mis metodos add y subtract aun vacíos.
+luego en mi otra carpeta llamada test, me creo un archivo llamado test_nombrearchivo_basic, en este caso, test_calculator_basic
+
+require 'minitest/autorun' // lo escribbo en mi archivo test_nombrearchivo de lib
+require 'calculator' //nombre archivo(ejemplo calculadora)
+
+class TestCalculator < Minitest::Test
+
+	def setup
+		@calc = Calculator.new
+	end
+
+	def test_addition
+		assert_equal 4, @calc.add(2,2), "Debe sumar 2 +2 y dar como resultado 4"//esto me va a mandar un error, ya que en mi clase mi metodo add lo tengo vacio.
+	end
+end
+mis tests están llenos de assertions (declaraciones afirmativas). assert_algo
+y tb existen los refute (lo contrario) refute_algo // poco común ver test con refutes.
+
+//PARA que GEM MINITEST reconozca que son test debemos llamarlos test_warevius
+
+Como ejecutar TEST en mi consola:
+sencillo, llamo al archivo en mi consola:
+$ ruby test/test_calculator_basic.rb
+
+Mai_Clear  Magdalenas-MacBook-Air in ~/desktop/rubytesting
+
+$ ruby test/test_calculator_basic.rb
+
+Run options: --seed 24719
+
+# Running:
+
+E
+
+Finished in 0.002106s, 474.7952 runs/s, 0.0000 assertions/s.
+
+  1) Error:
+TestCalculator#test_addition:
+ArgumentError: wrong number of arguments (2 for 0)
+    /Users/Mai_Clear/Desktop/rubytesting/lib/calculator.rb:3:in `add'
+    test/test_calculator_basic.rb:11:in `test_addition'
+
+1 runs, 0 assertions, 0 failures, 1 errors, 0 skips
+
+'////////////////////////////////////////////////////////
+so, la idea es crear un test que te tire inicialmente un error, para que luego uno agregue y erregle los errores para luego testear y que te tire todo bien.
+es como para ir guiandote para ir construyendo tu app., tu metodo o idea.
+
+GEMA MINITEST-REPORTERS //para enchular los test en la consola.
+$ gem install minitest-reporters
+
+luego me hago en mi carpeta de test un archivo llamado test_helper
+y escribir:
+
+require 'minitest/autorun'
+require 'minitest/reporters'
+
+Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
+
+///// luego voy a mi test_calculator_basic.rb
+y solo llamo a mi helper para no tener uqe llamar a mi gema en todos mis archivos
+
+require_relative 'test_helper'
+require_relative '../lib/calculator'
+(ojo que borre require 'minitest/autorun' , ya que esta en mi helper.)
