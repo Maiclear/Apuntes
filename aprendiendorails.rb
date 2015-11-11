@@ -2330,7 +2330,7 @@ luego en mi otra carpeta llamada test, me creo un archivo llamado test_nombrearc
 require 'minitest/autorun' // lo escribbo en mi archivo test_nombrearchivo de lib
 require 'calculator' //nombre archivo(ejemplo calculadora)
 
-class TestCalculator < Minitest::Test
+class TestCalculator < Minitest::Test //eso está extendiendo de la clase Minitest (en este caso la clase padre es Minitest. (clase extendida).)
 
 	def setup
 		@calc = Calculator.new
@@ -2390,3 +2390,78 @@ y solo llamo a mi helper para no tener uqe llamar a mi gema en todos mis archivo
 require_relative 'test_helper'
 require_relative '../lib/calculator'
 (ojo que borre require 'minitest/autorun' , ya que esta en mi helper.)
+
+
+////clases martes 10 NOv
+
+TESTING CON RAILS
+
+Rails viene con minitest incluida.
+
+TDD (test driven development, desarrollo guiado por el test)
+(los casos de usos que vimos en el trello se van a transformar en nuestros tests)
+
+Testing unitarios en los modelos:
+
+lo que uno deberia testear en los modelos son:
+-*validaciones en los campos (que vienen restricciones)
+-*relaciones
+-todo lo que es logica de negocios
+-y ojala que exista un test por cada metodo que tenga ese modelo.
+
+** estas dos son las mas importantes.
+
+
+en rails me permite escribir los test de la siguiente manera:
+class ProductTest < ActiveSupport::TestCase
+
+	test "cualquier nobre de test que yo quiera" do
+	  assert_algo true
+	end /// no como antes que era todo con guion bajo.
+
+end
+
+todos loq eu dicen assert_not se pueden reemplazar por refute
+lo mejorcito es que haya UN assert por cada test a lo mas 2.
+
+escribir esto en sublime text preferences/settings more/syntax-especific User:
+
+{
+	"extensions":
+	[
+		".gemrc",
+		"yml.dist",
+		"yml"
+	],
+	"tab_size": 2,
+	"translate_tabs_to_spaces": true
+}
+
+Para poder escribir en los archivos .yml, que es lo que vamos a hacer ahora en
+(al crear el user con devise debo agregar los iguiente a mano pq que da vacío)
+test/fixtures/user.yml
+me creo un user , es como un seed.
+
+Mai:
+  name: Mag
+  lastname: Clear
+  username: MaiClear
+  email: mai@clear.com
+  encrypted_password: <%= Devise::Encryptor.digest(User,'password') %> //>en caso de usar devise!
+
+  y ahora en products.yml
+
+one:
+  name: MacBook Air
+  content: notebook 13 pulgadas
+  price: 13000
+  user: Mai // pongo el nombre que va en "one" no en username  or name
+
+En el fondo los fixtures son como un seeds, son datos que tendremos disponibles cada vez que CORREMOS EL TEST.
+
+
+como ejecuto mis test en la consola de rails
+
+$ rake //corre TODOS los test.
+
+$ rake test test/models/user_test.rb //se pone la ruta cdo quieres correr el test especifico
