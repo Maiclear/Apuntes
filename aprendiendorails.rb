@@ -660,6 +660,10 @@ RELACION MUCHOS ES A MUCHOS: SIEMPRE HABRá UNA TABLA INTERMEDIA.
 	Para esto se crea una tabla intermedia con las 2 llaves foraneas.
 
 
+
+HOLA MARCOOOOOOOOO ÑSDQHGAÑCONJGVÓIY
+
+
 	TABLAS INTERMEDIAS
 
 		por convencion lleva el nombre de ambas tablas que llevan una relacion de muchos es a muchos en nuestro caso anterior se llamaria Movies_Genre,	 y contiene nuestras ambas foreing keys.
@@ -2465,3 +2469,25 @@ como ejecuto mis test en la consola de rails
 $ rake //corre TODOS los test.
 
 $ rake test test/models/user_test.rb //se pone la ruta cdo quieres correr el test especifico
+
+
+////// CLases miercoles 11 de nov ////
+
+ara validar que un numero sea integer:
+
+validates :price, numericality: {only_integer: true}
+validates :price, numericality: true
+
+
+validates :description , lenght: {minimun: 30 }
+
+
+TEST PARA DEVISE
+
+Incluir dentro  del test_helper:
+
+class ACtionController::TestCase
+	include
+
+
+///tags con tabla intermedia relacion musho es a mushommssss.
