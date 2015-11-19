@@ -651,7 +651,7 @@ RELACION MUCHOS ES A MUCHOS: SIEMPRE HABRá UNA TABLA INTERMEDIA.
 	*---*
 	n---n
 
-	has_and_belong_to_many (HABTM)
+	has_and_belongs_to_many (HABTM)
 
 	$ rails g migration CreateJoinTableNombreTabla1_NombreTabla2 // esto me crea mi tabla intermedia.
 
@@ -682,8 +682,8 @@ HOLA MARCOOOOOOOOO ÑSDQHGAÑCONJGVÓIY
 			esto me crea mi tabla intermedia, pero NO un modelo, solo la tabla.
 	y en los modelos (clases) de tabla1 y tabla2 (en este caso movies y genre) poner
 
-	has_and_belong_to_many :genre // en la clase movie.(como antes ponias has_many, o belongs_to)
-	has_and_belong_to_many :movie // en la clase genre.
+	has_and_belongs_to_many :genre // en la clase movie.(como antes ponias has_many, o belongs_to)
+	has_and_belongs_to_many :movie // en la clase genre.
 
 	al crear la relacion entre ambos te crea un metodo:
 	m.genres (el genres para movies) y g.movies (movies para el genre) // en este casp m y g fueron asignados por juancri por una peli especifica para m y un genero especifico para g. ( un m =Movie.find(6), g = Genre.find(4), por ejemplo.) y estos metodos me muestra ctos hay, puedo meter mas, puedo editar (agregar . borrar, ver)
@@ -2491,3 +2491,485 @@ class ACtionController::TestCase
 
 
 ///tags con tabla intermedia relacion musho es a mushommssss.
+
+
+AJAX en rails
+
+-agregar a los formularios remote: true
+<%= form_for(@post, remote: true) do |f| %> //con remote: true sabe que estas pidiendo ajax.
+>
+y en
+posts_controller
+>en el metodo que llama al formulario, a parte del .json en respond_to
+agrego la línea en el if y en else
+
+format.js //*****
+
+def create
+    @post = Post.new(post_params)
+    @post.user = current_user if user_is_sign_in?
+
+    respond_to do |format|
+      if @post.save
+        format.html { redirect_to root_path, notice: 'Post was successfully created.' }
+        format.json { render :show, status: :created, location: @post }
+        format.js //******
+      else
+        format.html { render :new }
+        format.json { render json: @post.errors, status: :unprocessable_entity }
+        format.js //*****
+      end
+    end
+  end
+
+-luego en la vistas de post (o del que estamos arreglando)
+
+shift + cmd +p => partial, para crear nueva vista partial y renderiarla con lo que tengo seleccionado.
+
+
+AJAX
+
+no olvidar escapar en el archivo .js dentro de ruby ejemplo
+
+.("<%= j @comment.content %> ") para no tener problemas con las rutas.
+
+
+Ahora nos haremos un buscador:
+
+en index nos haremos un fomrulario:
+
+<div>
+<label> Buscar: <input class= "search" type="text" name="query" placeholder="Ingresa tu busqueda"></label>
+</div>
+
+ahora en el index
+seleccionar mi clase ,mi buscador,
+<script>
+	$('.search').on('keyup',function(event){
+		var query = $(this).val();
+		$.ajax({
+			url: '<%= posts_path %>',
+			type: 'GET',
+			dataType: 'script',
+			data: {q: query},
+
+			})
+
+		});
+</script>
+
+y en post_controller
+
+en el metodo index crear el
+def index
+	if params[:q].present?
+		@posts = Post.where("name LIKE ?","%#{ params[:q]% }")
+	else
+
+	respond_to do |format|
+		format.html //estos dos pq tb nos debe devolver el html que viene por defecto.
+		format.js //
+	end
+
+end
+
+y no olvidar agregar en las vistas de post el archivo
+
+index.js.erb.
+
+$('.posts').html('<%= j render @posts %>'); //el selector aqui .posts es el nombre de la clase lo mismo arriba .search
+
+
+Los scopes se usan para hacer consultas a las bases de datos, y son metodos de clase.
+
+
+///////clases 16 noviembre lunes/////
+
+GEOLOCALIZACION
+
+gema GEOCODER
+
+	gem 'geocoder'
+
+	https://github.com/alexreisner/geocoder
+
+	Agrego al usuario los campos latitud, longitud y adress
+
+	luego debemos editar las vistas y agregar nuestros nuevos campos.
+
+	no olvidar agregar a los strong params en el app_controller. // SOLO en devise esta en application_controller, para modelos normales tenemos el controlador especifico.
+
+	Luego en el modelo user
+
+	geocoded_by :address
+	after_validation :geocode, if: ->(obj) {obj.address.present? and obj.address_changed?} //antes del metodo default.
+
+	esto se corre en la consola, para que para todos los usuario si se le agrega con direcciones, te agrega las longitudes y latitudes luego (cdo ya tenia creado ususarios sin aplicarles geocoders.)
+
+	$ rake geocode:all CLASS=User
+
+	ahora agregamos una ruta ,para que cdo uno agrege o edite el perfil, no te saque del usuario
+	vamos a las rutas: //*****
+
+	  devise_scope :user do
+	    get    "login"   => "devise/sessions#new",         as: :new_user_session
+	    post   "login"   => "devise/sessions#create",      as: :user_session
+	    delete "signout" => "devise/sessions#destroy",     as: :destroy_user_session
+
+	    get    "signup"  => "devise/registrations#new",    as: :new_user_registration
+	    post   "signup"  => "devise/registrations#create", as: :user_registration
+	    put    "signup"  => "devise/registrations#update", as: :update_user_registration
+	    get    "account" => "devise/registrations#edit",   as: :edit_user_registration
+	    get    "users"   => "devise/registrations#edit",   as: :user_root//**** esta.
+	  end
+
+
+	  .nearbys(n) // metodo de INSTANCIA, que me muestro los objetos que estan cercano a ese objeto.
+
+
+luego si corremos esta linea el la consola:
+
+$ rails g geocoder:config
+
+y en el initalizers aparece:
+en el initializers/geocoder.rb
+
+donde podemos configurarlo.
+
+(por ejemplo podemos cambiar el millas por km)
+descomentando
+
+units: :km,
+
+
+Voy a assets y en javascript me hago un archivo llamado locations.js
+(ojo que a mi salió uno creado en singular (al parecer se creo con el controlador))
+y escribo
+$(document).on("page:change", function(){
+
+	function geoSuccess(position) {
+		var lat = position.coords.latitude;
+		var lon = position.coords.longitude;
+
+		$('.js-latitude').val(lat);
+		$('.js-longitude').val(lon);
+
+		$.ajax({
+			url:'/get_address',
+			type: 'GET',
+			dataType: 'script',
+			data: {
+				latitude: lat,
+				longitude: lon,
+			}
+		});
+	}
+	function geoError(error){
+		alert('Intentalo de nuevo mas tarde!');
+	}
+
+	function getLocation(){
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
+		}
+		else{
+			alert('Geolocation is not supported by this browser, use Chrome, Firefox or Safari');
+		}
+	}
+
+	if($('.registrations.new').length > 0) {
+		getLocation();
+	}
+
+	});
+
+
+ahora en las rutas agregar
+
+get 'get_address', to: 'locations#get_address'
+
+luego me creo un controllador para controlar las vistas, y agregar mi format.js, ya que estoy usando ajax (luego hacer la vista tb, con el nombre del metodo.)
+
+$ rails g controller locations get_address
+
+
+y en el controller escribo:
+
+class LocationsController < ApplicationController
+  def get_address
+    lat = params[:latitude]
+    lon = params[:longitude]
+    @address = Geocoder.address("#{lat},#{lon}")
+    respond_to do |format|
+      format.js
+    end
+  end
+end
+
+y cambio el nombre de la vista html, de get_address, ya que no usaremos html.
+en ella escribo: get_addess.js.erb, en ella escribo:
+s
+
+alert('.js-address').val("<%= j @address %>"); //aqui estamos seleccionando la clase js_address porque le agregue esa clase en mi form de devise registration a mi address, lat y lon. para poder hacer este tipo de cosas.
+
+y en views/layaout/application.html.erb
+application.html.erb //*******
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ecommerce</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body class="<%= controller_name %> <%= action_name %>"> //***AGREGO ESTAS DOS CLASES.
+
+	<%= render 'shared/navbar' %>
+
+	<%= flash_messages %>
+
+	<div class="container">
+		<%= yield %>
+	</div>
+
+	<%= render 'shared/footer' %>
+
+</body>
+</html>
+
+
+
+///// clases miercoles 18 nov///////////
+
+
+GOOGLE MAPS
+
+
+developers.google.com/maps
+
+Gema GMAPS4RAILS
+https://github.com/apneadiving/Google-Maps-for-Rails
+
+gem 'gmaps4rails'
+pero esta gema tiene una dependencia de esta siguiente gema, tonces debemos ademas agregar esta gema: ya que
+gem 'underscore-rails' // gmaps4rails depende de esta gema .
+
+Luego en asstes/javascipts/aplication.js
+
+agregamos antes de //= require tree
+//= require underscore
+//= require gmaps/google
+
+LUego vamos al aplication layaut en views/layaout/application.html.erb
+application.html.erb
+
+agregamos antes del cierre del body unos javascripts
+
+<script src="//maps.google.com/maps/api/js?v=3.18&sensor=false&client=&key=&libraries=geometry&language=&hl=&region="></script>
+<script src="//google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js"></script>
+<script src='//google-maps-utility-library-v3.googlecode.com/svn/tags/infobox/1.1.9/src/infobox_packed.js' type='text/javascript'></script> <!-- only if you need custom infoboxes -->
+
+que las sacamos de la documentacion de gmaps4rails de 2) Javascript Dependencies: en
+https://github.com/apneadiving/Google-Maps-for-Rails
+
+
+LUego tenemos que añadir un div vacio, que es donde se va a cargar el mapa.
+para el html en donde quiero que salga.
+
+en este ejemplo vamos
+al registration / new.html.erb
+
+agrego antes del cierre del Div , despues del end
+
+  <div class = "col-md-5 col-md-offset-1">
+      # map
+
+    <div id= "map" class = "gmap m-t-md"></div>
+
+  </div>
+
+  Luego en stylesheet , en este caso locations.scss
+
+  .gmap {
+	width: 100%;
+	height: 400px;
+	background-color: red;
+}
+
+y para llamarlo voy a plications.scss
+
+y agrego ***
+
+ @charset "UTF-8";
+ $enable-flex: true;
+ @import "bootstrap";
+ @import "alert";
+ @import "buttons";
+ @import "locations"; //**** agrego esta linea para llamar mi archivo de estilo. con el nombre de mi archivo.
+
+ luego voy a locations.js y escribo en el final (para construirme un manejador) Para que aparezca el mapa.
+
+var handler = Gmaps.build('Google');
+	handler.buildMap({provider: {}, internal: {id: 'map'}}, function(){
+		handler.map.centerOn({
+			lat: -33.43463512865037,
+			lng: -70.63528559705685
+		})
+		handler.getMap().setZoom(15);
+	});
+
+
+	para agregar o sacarles cosas al mapa, dentro de la documentacion
+	voy a MapsOptions.
+
+
+	EN REALIDAD LO ANTERIOR NO
+
+	luego en get_address
+
+	var handler = Gmaps.build('Google');
+	handler.buildMap({provider: {}, internal: {id: 'map'}}, function(){
+		var markers = handler.addMarkers(<%= raw @markers.to_json %>);
+		handler.bounds.extendWith(markers);
+		handler.fitMapToBounds();
+		handler.getMap().setZoom(15);
+
+
+	});
+
+////> AHORA PARA EL EDIT
+
+voy a location.js, y agrego:
+if($('.registrations.edit').length > 0) {
+		getUserLocation();
+	}
+
+	y su funtion:
+
+
+
+
+
+
+$(document).on("page:change", function(){
+
+	function geoSuccess(position) {
+		var lat = position.coords.latitude;
+		var lon = position.coords.longitude;
+
+		$('.js-latitude').val(lat);
+		$('.js-longitude').val(lon);
+
+		$.ajax({
+			url:'/get_address',
+			type: 'GET',
+			dataType: 'script',
+			data: {
+				latitude: lat,
+				longitude: lon,
+			}
+		});
+	}
+	function geoError(error){
+		alert('Intentalo de nuevo mas tarde!');
+	}
+
+	function getLocation(){
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
+		}
+		else{
+			alert('Geolocation is not supported by this browser, use Chrome, Firefox or Safari');
+		}
+	}
+
+	function getUserLocation(){
+
+		$.ajax({
+			url:'/get_address',
+			type: 'GET',
+			dataType: 'script',
+			// data: {
+			// 	latitude: lat,
+			// 	longitude: lon,
+			// }
+		});
+
+	}
+
+	$('.js-getlocation').on('click', function(event) {
+		event.preventDefault();
+		getLocation();
+	});
+
+	if($('.registrations.new').length > 0) {
+		getLocation();
+	}
+
+	if($('.registrations.edit').length > 0) {
+		getUserLocation();
+	}
+
+
+
+});
+
+LUego voy a mi application_controller y agrego otros params
+
+ @user = current_user
+
+    if @user
+      @adress = @user.address
+      lat = @user.latitude
+      lon = @user.longitude
+    end
+
+    if params[:latitud].present?
+      lat = params[:latitude]
+      lon = params[:longitude]
+      @address = Geocoder.address("#{lat},#{lon}")
+    end
+
+////////////////////////quedando asi:
+
+    class LocationsController < ApplicationController
+  def get_address
+
+    @user = current_user
+
+    if @user
+      @adress = @user.address
+      lat = @user.latitude
+      lon = @user.longitude
+    end
+
+    if params[:latitud].present?
+      lat = params[:latitude]
+      lon = params[:longitude]
+      @address = Geocoder.address("#{lat},#{lon}")
+    end
+
+    @markers = [{
+      lat: lat,
+      lng: lon
+      }]
+
+    respond_to do |format|
+      format.js
+    end
+  end
+end
+//////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
