@@ -2917,7 +2917,7 @@ $(document).on("page:change", function(){
 
 });
 
-LUego voy a mi application_controller y agrego otros params
+LUego voy a mi locations_controller y agrego otros params
 
  @user = current_user
 
@@ -2963,6 +2963,8 @@ LUego voy a mi application_controller y agrego otros params
   end
 end
 //////////////////////////////////////////
+
+AHora COMO MOSTRAR VARIOS PUNTOS EN EL MAPA.
 
 
 
