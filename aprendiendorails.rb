@@ -2799,7 +2799,7 @@ agrego antes del cierre del Div , despues del end
 	background-color: red;
 }
 
-y para llamarlo voy a plications.scss
+y para llamarlo voy aplications.scss
 
 y agrego ***
 
@@ -2967,6 +2967,25 @@ end
 AHora COMO MOSTRAR VARIOS PUNTOS EN EL MAPA.
 
 
+
+ahora nos vamos a products.erb
+y agregamos :
+
+
+ geocoded_by :address //***esta dice de address a lat y lng
+ reverse_geocoded_by :latitude, :longitude //****esta al reves, de lat y lng a address
+
+  after_validation :geocode, if: ->(obj) {obj.address.present? and obj.address_changed?}
+
+  after_validation :reverse_geocoded, if: ->(obj) {(obj.latitude.present? && obj.longitude.present?) and (obj.latitude_changed || obj.longitude_changed?)}
+
+  default_scope { order(:id) }
+
+  y en product_controller.erb
+
+  agregamos los strongs params.
+
+me fui a la mierda..... me perdi
 
 
 
