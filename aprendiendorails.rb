@@ -933,7 +933,7 @@ luego en views cree la carpeta shared y en ella esta vista PARCIAL, llamada siem
 <%= render "devise/shared/links" %>
 >/////////////////////////////////////////
 
-HELPERS DE DEVISE
+HELPERS DE DEVISE //NO OLVIDAR PONERLO
 
 before_action :authenticate_user! // todos dicen user xq me creee mi modelo llamado User.
 user_signed_in?
@@ -1371,6 +1371,8 @@ end
 
 (reguntas, cdo se pone like o likeS en rails y en la consola?, que es scope)
 
+Scope = es un metodo de clase, para añadir querys, querys son consultas a la base de datos
+
 PARA CREAR UN LIKE EN LA CONSOLA RAILS
 
 [3] pry(main)>Comment.last.likes.build(user: User.last).save
@@ -1539,9 +1541,9 @@ RESTRINGIR LOS ME GUSTA A UNO SOLO POR USER. // un LIKE por USER
 ///////////OJO/////////
 
 scope es para hacer preguntas a nivel de clase, no se puede hacer  una instancia.
-scope tipo de query ?
-scopes son metodos de clase.
 
+scopes son metodos de clase, para añadir querys
+SCOPE = es un metodo de clase, para añadir querys, querys son consultas a la base de datos
 ////////////////////////
 
 //////ojo////
@@ -1695,7 +1697,7 @@ $ rails g uploader NombredelCampo //en este caso $ rails g uploader Image
 y ahora dentro de la carpeta app/uploader
 se crea uploader.
 
-- No olvidar poner image(o nombre del campo) en los strong params del controllern(product en este caso)
+- No olvidar poner image(o nombre del campo) en los strong params del controllern(product en este caso) y la naturaleza del campo image:string  es STRING
 
 -luego poner .gitignore poner la ruta /public/uploads
 (que es para que lo ignore, para que no te suba por ahora )
@@ -2219,7 +2221,7 @@ puedes configurar el nombre de tu pagina y hacerle que se link  poniendole un '\
 (\ solo te lleva al root, \warwver te lleva al warever path...etc)
 '
 
-SCOPES : (botones de filtrado)
+SCOPES : (botones de filtrado) //los scopes son metodos de clase, para añadir querys (consultas a base de datos = query)
 
 PARA HACER BOTONES EN LAS VISTAS DEL ACTIVE ADMIN PRA FILTRADO
 
@@ -2988,6 +2990,166 @@ y agregamos :
 me fui a la mierda..... me perdi
 
 
+////////////////////clases jueves 19 nov ///////////////
+
+Paginación
+
+GEMA Kaminari
+https://github.com/amatsuda/kaminari
+
+gem 'kaminari'
+
+Ayuda a hacer paginacion dentro de nuestro proyecto.
+
+$ rails g kaminari:config
+
+y en products _controller
+
+agrego .page().per()
+
+@products = Product.all.includes(:category).page(1).per(3)
+
+
+/////////
+
+URL FRIENDLY //para que las url sean mas personalizadas.
+
+gem 'friendly_id'
+
+$ rails g friendly_id
+rake db:migrate
+
+y debemos agregar Slug a loq ue quieras que parezca amistosamente en la url,
+en este caso los productos
+
+$ rails g migration addSlugToProducts
+slug:string:uniq
+
+
+y en el modelo product.rb
+
+extend FriendlyId
+	friendly_id :
+
+hacer un inicialicer???
+
+en friendly_id.rb
+descomentar
+
+config.use :slugged
+
+
+/////////
+GEMA PG_SEARCH //gema que solo sirve para base de datos postgres, para hacer un "BUSCAR:"
+con todo tipo de filtraciones.
+
+gem 'pg_search'
+https://github.com/Casecommons/pg_search
+
+
+tabla contacto:
+
+primer nombre
+apellido
+street address
+zip code
+ciudad
+pais
+country code
+mail
+phone number
+twitter
+avatar //carrierwave
+lat
+lng
+
+devise
+user.
+
+//////clases lunes 23 nov
+
+google charts
+
+GEMA CHARTKICK
+gem 'chartkick'
+http://chartkick.com/
+
+(lo que hace es conectar con api de google, google charts
+GOOGLE CHARTS
+documentacion: https://developers.google.com/chart/
+
+highcharts, otra api de graficos que se podria usar.
+http://www.highcharts.com/)
+
+
+GEMA GROUPDATE
+gem 'groupdate'
+https://github.com/ankane/groupdate
+
+
+GEMA HIGHTOP
+gem 'hightop'
+https://github.com/ankane/hightop
+
+GEMA ACTIVE_MEDIAN
+gem 'active_median'
+https://github.com/ankane/active_median
+
+
+
+OJO: hay qeu cambiar los scope por defecto(default_scope) en los modelos, ya que traen problemas con loas gemas como chartkcick.
+
+y cambiar en el controller correspondiente, que te ordene tb por el scope que te creaste.
+
+ejemplo en user:
+antes habia un default_scope { order(:role, :id) }
+y lo cambio por:
+scope :order_by_role, -> { order(:role, :id) }
+
+y en el cntroller por ejemplo tenemos que:
+def index
+    @users = User.all
+  end
+
+y lo cambiamos por nuestro scope:
+
+ def index
+    @users = User.order_by_role
+  end
+
+
+  //// Luego en admin.html.erb layout
+
+  meter el javascript de google charts, la api de google charts
+
+  <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
+  > en caso de google charts (todo esto sale en la docu)
+
+luego en la vista index de admin, pero del controlador!!!, pages_controller.erb
+y en index escribir esta query:
+
+def index
+
+	orders_raw = Order.group(:status).count
+	@orders = {}
+	@orders[:pendiente] = orders_raw[0]
+	@orders[:pagado] = orders_raw[1]
+	@orders[:cancelado] = orders_raw[2]
+
+end
+
+todo esto porque lo habiamos definido con enum, entonces debemos definir que nos muestre en cada indice (y no un numero)
+
+
+Ahora en index.html.erb del admin/pages:
+
+
+<h2> Admin Data </h2>
+<%= pie_chart(tipo de chart) @orders, opciones de chartkcik %>
+> EJEMPLOS:
+<%= pie_chart @orders, discrete: true %>
+>Agregamos el hash library, para opcciones que no se pueden poner antes(que no este en la documentacion, como por ejemplo titulo:
+<%= pie_chart @orders,discrete: true,  library: {title: "Hola Mundo"} %>
 
 
 
