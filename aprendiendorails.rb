@@ -27,8 +27,11 @@ CREANDO NUEVO PROYECTO EN RAILS Y TERMINAL.
 luego de crear Un proyecyo con rails con rails new nombre
 entrar al proyecto nuevo
 poner git init
-crear el GIT IGNORE (osx + rails) generar
+crear el GIT IGNORE (osx + rails) generar //AGREGAR config/secrets.yml
+												config/database.yml y .env y .powenv
+https://www.gitignore.io
 copy paste
+
 poner en terminal subl .gitignore (el espacio punto es para abrir subl en el proyecto en el qeu estoy)
 y pegar lo que salía en la pagina web dentro del archivo gitignore en subline
 luego git add . (o git add --all, para añadir todo)
@@ -862,7 +865,7 @@ luego en views cree la carpeta shared y en ella esta vista PARCIAL, llamada siem
 	<% end %>
 </p>
 
-////////////////
+////////////////HHHH HOLAAAAA IGOOOOOORRR!!!!
 
 >y en la vista layaout/aplication.html.erb agregar dentro del BODY
 <%= render partial: 'shared/navbar' %>
@@ -3153,6 +3156,400 @@ Ahora en index.html.erb del admin/pages:
 
 
 
+>/////////////////////Clases martes 24 NOV /////////
+
+DEPLOYMENT
+
+INFRASTRUCTURA
+(amazon web service)
+
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ chmod 400 Desktop/desafiolatamg2.pem
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ ssh -i Desktop/desafiolatamg2.pem ubuntu@52.33.160.229 //es ta el IP
+
+para entrar a la maquina virtual , para salir escribir exit
+
+
+//////////////////////////CONSOLA//////////////////////
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ chmod 400 Desktop/desafiolatamg2.pem
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ ssh -i Desktop/desafiolatamg2.pem ubuntu@52.33.160.229
+The authenticity of host '52.33.160.229 (52.33.160.229)' can't be established.
+RSA key fingerprint is 9a:95:73:9f:b5:b9:65:95:e3:25:d2:fc:b8:35:95:b9.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '52.33.160.229' (RSA) to the list of known hosts.
+Welcome to Ubuntu 14.04.2 LTS (GNU/Linux 3.13.0-48-generic x86_64)
+
+ '* Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Nov 25 00:00:24 UTC 2015
+
+  System load:  0.0               Processes:           96
+  Usage of /:   11.4% of 7.74GB   Users logged in:     0
+  Memory usage: 7%                IP address for eth0: 172.31.32.131
+  Swap usage:   0%
+
+  Graph this data and manage this system at:
+    https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+136 packages can be updated.
+63 updates are security updates.
+
+
+Last login: Wed Nov 25 00:00:25 2015 from 186.67.30.194
+_____________________________________________________________________
+WARNING! Your environment specifies an invalid locale.
+ This can affect your user experience significantly, including the
+ ability to manage packages. You may install the locales by running:
+
+   sudo apt-get install language-pack-UTF-8
+     or
+   sudo locale-gen UTF-8
+
+To see all available language packs, run:
+   apt-cache search "^language-pack-[a-z][a-z]$"
+To disable this message for all users, run:
+   sudo touch /var/lib/cloud/instance/locale-check.skip
+_____________________________________________________________________
+
+ubuntu@ip-172-31-32-131:~$ exit
+logout
+Connection to 52.33.160.229 closed.
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ cp ~/Desktop/Mai_Clear  Magdalenas-MacBook-Air in ~
+cp: /Users/Mai_Clear/Desktop/Mai_Clear: No such file or directory
+cp: : No such file or directory
+cp: Magdalenas-MacBook-Air: No such file or directory
+cp: in: No such file or directory
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ $ chmod 400 Desktop/desafiolatamg2.pem
+-bash: $: command not found
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ Mai_Clear  Magdalenas-MacBook-Air in ~
+-bash: Mai_Clear: command not found
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ cp ~/Desktop/desafiolatamg2.pem ~/.ssh
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ cd ~/.ssh
+Mai_Clear  Magdalenas-MacBook-Air in ~/.ssh
+$ ls
+desafiolatamg2.pem github_rsa         github_rsa.pub     id_rsa             id_rsa.pub         known_hosts
+Mai_Clear  Magdalenas-MacBook-Air in ~/.ssh
+$ cd
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ eval "$(ssh-agent-s)"
+-bash: ssh-agent-s: command not found
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ eval "$(ssh-agent -s)"
+Agent pid 80020
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ ssh-add ~/.ssh/desafiolatamg2.pem
+Identity added: /Users/Mai_Clear/.ssh/desafiolatamg2.pem (/Users/Mai_Clear/.ssh/desafiolatamg2.pem)
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ ssh-add-l
+-bash: ssh-add-l: command not found
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ ssh-add -l
+2048 03:4e:45:59:a4:c5:01:49:6f:46:ee:dd:7e:02:d0:68 /Users/Mai_Clear/.ssh/desafiolatamg2.pem (RSA)
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ ssh ubuntu@52.33.73.197
+The authenticity of host '52.33.73.197 (52.33.73.197)' can't be established.
+RSA key fingerprint is 70:5e:7a:dd:af:94:12:4e:2d:53:b2:e0:96:cb:58:52.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '52.33.73.197' (RSA) to the list of known hosts.
+Welcome to Ubuntu 14.04.2 LTS (GNU/Linux 3.13.0-48-generic x86_64)
+
+ '* Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Nov 23 20:45:42 UTC 2015
+
+  System load: 0.16             Memory usage: 5%   Processes:       81
+  Usage of /:  9.8% of 7.74GB   Swap usage:   0%   Users logged in: 0
+
+  Graph this data and manage this system at:
+    https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+0 packages can be updated.
+0 updates are security updates.
 
 
 
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+_____________________________________________________________________
+WARNING! Your environment specifies an invalid locale.
+ This can affect your user experience significantly, including the
+ ability to manage packages. You may install the locales by running:
+
+   sudo apt-get install language-pack-UTF-8
+     or
+   sudo locale-gen UTF-8
+
+To see all available language packs, run:
+   apt-cache search "^language-pack-[a-z][a-z]$"
+To disable this message for all users, run:
+   sudo touch /var/lib/cloud/instance/locale-check.skip
+_____________________________________________________________________
+
+ubuntu@ip-172-31-37-139:~$ sudo locale-gen "en_US.UTF-8"
+Generating locales...
+  en_US.UTF-8... up-to-date
+Generation complete.
+ubuntu@ip-172-31-37-139:~$ sudo dpkg-reconfigure locales
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LC_CTYPE = "UTF-8",
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+locale: Cannot set LC_CTYPE to default locale: No such file or directory
+locale: Cannot set LC_ALL to default locale: No such file or directory
+Generating locales...
+  en_US.UTF-8... up-to-date
+Generation complete.
+ubuntu@ip-172-31-37-139:~$ sudo locale-gen "en_US.UTF-8"
+Generating locales...
+  en_US.UTF-8... up-to-date
+Generation complete.
+ubuntu@ip-172-31-37-139:~$ sudo dpkg-reconfigure locales
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LC_CTYPE = "UTF-8",
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+locale: Cannot set LC_CTYPE to default locale: No such file or directory
+locale: Cannot set LC_ALL to default locale: No such file or directory
+Generating locales...
+  en_US.UTF-8... up-to-date
+Generation complete.
+ubuntu@ip-172-31-37-139:~$ sudo nano /etc/enviroment
+ubuntu@ip-172-31-37-139:~$ exit
+logout
+Connection to 52.33.73.197 closed.
+Mai_Clear  Magdalenas-MacBook-Air in ~
+$ ssh ubuntu@52.33.73.197
+Welcome to Ubuntu 14.04.2 LTS (GNU/Linux 3.13.0-48-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Nov 25 00:12:18 UTC 2015
+
+  System load:  0.0               Processes:           96
+  Usage of /:   11.4% of 7.74GB   Users logged in:     0
+  Memory usage: 7%                IP address for eth0: 172.31.37.139
+  Swap usage:   0%
+
+  Graph this data and manage this system at:
+    https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+136 packages can be updated.
+63 updates are security updates.
+
+
+Last login: Wed Nov 25 00:12:19 2015 from 201.220.244.135
+ubuntu@ip-172-31-37-139:~$ sudo dpkg-reconfigure tzdata
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LC_CTYPE = "UTF-8",
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+locale: Cannot set LC_CTYPE to default locale: No such file or directory
+locale: Cannot set LC_ALL to default locale: No such file or directory
+/usr/bin/locale: Cannot set LC_CTYPE to default locale: No such file or directory
+/usr/bin/locale: Cannot set LC_ALL to default locale: No such file or directory
+
+Current default time zone: 'America/Santiago'
+Local time is now:      Tue Nov 24 21:22:50 CLT 2015.
+Universal Time is now:  Wed Nov 25 00:22:50 UTC 2015.
+
+ubuntu@ip-172-31-37-139:~$ date
+Tue Nov 24 21:22:53 CLT 2015
+////////////////////////////////////////////////////////////////////
+
+sudo ln -s ruta_original ruta_destino /// para hacer un link SIMBOLICO (-s)
+
+
+//////CLASES SUBIR EXCEL Y CVS
+
+crear lib folder y archivo
+Folder: Csv2Json
+Archivo: Csv2json
+
+module Csv2json
+  require 'csv'
+  require 'json'
+
+  def self.csv_to_json(path)
+    file_name = File.basename(path, '.*')
+
+    File.open("public/json/#{file_name}.json", 'w') do |f|
+      f.write(CSV.open(path, headers: true, header_converters: :symbol, converters: :all).to_a.map(&:to_hash).to_json)
+      f.close
+
+    end
+  end
+
+end
+
+
+en config/aplication) para llamar al modulo.
+
+escribir :
+
+config.autoload_paths += %W(#{Rails.root}/lib)
+    config.autoload_paths += %W(#{Rails.root}/lib/Csv2json)///con el nombre del folder, y la W es mayuscula pq interga dentro del hash #{} <-eso
+
+en document_controller:
+/////////////////////////////////////
+
+class DocumentsController < ApplicationController
+  before_action :set_document, only: [:show, :edit, :update, :destroy]
+
+  # GET /documents
+  # GET /documents.json
+  def index
+    @documents = Document.all
+  end
+
+  # GET /documents/1
+  # GET /documents/1.json
+  def show
+  end
+
+  # GET /documents/new
+  def new
+    @document = Document.new
+  end
+
+  # GET /documents/1/edit
+  def edit
+  end
+
+  # POST /documents
+  # POST /documents.json
+  def create
+    @document = Document.new(document_params)
+
+    if @document.invalid?
+      return render :new
+    end
+
+    @name = @document.name.downcase
+
+    @document_type = File.extname @document.file.path
+
+    if @document_type == '.csv'
+      Csv2json::csv_to_json @document.file.path
+    elsif @document_type == '.xls' || @document_type == '.xlsx'
+      return
+    end
+
+    case @name
+    when 'regions', 'regiones', 'region' then read_regions
+    when 'provincia', 'province', 'provincias', 'provinces' then
+      read_provinces
+    when 'comune', 'communes', 'comunas', 'comuna' then read_communes
+    end
+
+    respond_to do |format|
+      if @document.save
+        format.html { redirect_to @document, notice: 'Document was successfully created.' }
+        format.json { render :show, status: :created, location: @document }
+      else
+        format.html { render :new }
+        format.json { render json: @document.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PATCH/PUT /documents/1
+  # PATCH/PUT /documents/1.json
+  def update
+    respond_to do |format|
+      if @document.update(document_params)
+        format.html { redirect_to @document, notice: 'Document was successfully updated.' }
+        format.json { render :show, status: :ok, location: @document }
+      else
+        format.html { render :edit }
+        format.json { render json: @document.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /documents/1
+  # DELETE /documents/1.json
+  def destroy
+    @document.destroy
+    respond_to do |format|
+      format.html { redirect_to documents_url, notice: 'Document was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_document
+      @document = Document.find(params[:id])
+    end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def document_params
+      params.require(:document).permit(:name, :file)
+    end
+
+
+    def read_regions
+      path = 'public/json/regions.json'
+      json = JSON.parse(File.open(path).read)
+
+      Regions.delete_all
+      json.each do |data|
+        Regions.create(number: :data['numero'],name: :data['nombre'],title: :data['titulo'],id: :data['id'] )
+      end
+    end
+
+    def read_communes
+      path = 'public/json/communes.json'
+    end
+    def read_provinces
+      path = 'public/json/provinces.json'
+    end
+
+end
+///////////////////////////////////////
+NO OLVIDAR QUE ANTES DE CUALQUIER COMMIT PONER:
+
+.ENV
+
+EN EL GIT.IGNORE:
+
+CONFIG/DATABASE.YML
+CONFIG/SECRETS.YML
+.ENV
+.POWENV
+
+PARA QUE NO HAYA PROBLEMAS CON LAS CLAVES!!!!!!!!! TOP SECRETS!!!!
