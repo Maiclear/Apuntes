@@ -3543,7 +3543,6 @@ end
 ///////////////////////////////////////
 NO OLVIDAR QUE ANTES DE CUALQUIER COMMIT PONER:
 
-.ENV
 
 EN EL GIT.IGNORE:
 
@@ -3553,3 +3552,16 @@ CONFIG/SECRETS.YML
 .POWENV
 
 PARA QUE NO HAYA PROBLEMAS CON LAS CLAVES!!!!!!!!! TOP SECRETS!!!!
+
+
+//////////////gema para forms y ediciones en linea y mucho mas
+
+https://github.com/bernat/best_in_place
+best in place
+https://www.youtube.com/watch?v=zFiIWzqG20Q&app=desktop
+//////////////////
+
+gema de likes
+
+gem 'acts_as_votable'
+https://github.com/ryanto/acts_as_votable
